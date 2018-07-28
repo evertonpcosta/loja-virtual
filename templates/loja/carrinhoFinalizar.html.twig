@@ -1,7 +1,7 @@
 {# templates/base.html.twig #}
 {% extends 'base.html.twig' %}
 {% block body %}
-       <!-- Search Wrapper Area Start -->
+        <!-- Search Wrapper Area Start -->
     <div class="search-wrapper section-padding-100">
         <div class="search-close">
             <i class="fa fa-close" aria-hidden="true"></i>
@@ -40,9 +40,15 @@
             <div class="widget catagory mb-50">
 
             <!-- Button Group -->
-            <div class="amado-btn-group mt-30 mb-100">
-                <a href="#" class="btn amado-btn active">Login</a>
-            </div>
+            {% if app.user %}
+                <div class="amado-btn-group mt-30 mb-100">
+                    <div class="btn amado-btn active">{{ app.user.username}}</div>
+                </div>
+            {% else %}
+                <div class="amado-btn-group mt-30 mb-100">
+                    <a href="#" class="btn amado-btn active">Login</a>
+                </div>
+            {% endif %}
 
             <!-- Cart Menu -->
             <div class="cart-fav-search mb-100">
@@ -60,32 +66,15 @@
             </div>
         </header>
         <!-- Header Area End -->
-        
-        <div class="cart-table-area section-padding-100">
+                <div class="cart-table-area section-padding-100">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-12 col-lg-8">
-                        <div class="checkout_details_area mt-50 clearfix">
-
-                            <div class="cart-title">
-                                <h2>Login</h2>
-                            </div>
-                            {% if error %}
-                                <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-                            {% endif %}
-                            <form action="{{ path('login') }}" method="post">
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <input type="text" class="form-control" id="username" name="_username" value="{{ last_username }}" placeholder="Username" required>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <input type="password" class="form-control" id="password" name="_password" placeholder="Password" required>
-                                    </div>
-                                    <div class="cart-btn mt-100">
-                                        <button type="submit"class="btn amado-btn w-100">Login</button>
-                                    </div>
-                                </div>
-                            </form>
+                    <div class="col-12 col-lg-4">
+                        <div class="cart-summary">
+                            <div class="short_overview my-5">
+                                <p>Seu pedido foi realizado com sucesso. </p>
+                                <p>para visualizar os seus pedidos, acesse a aba <a href="/pedidos">meus pedidos</a></p>
+                            </div>   
                         </div>
                     </div>
                 </div>
@@ -94,4 +83,6 @@
     </div>
     <!-- ##### Main Content Wrapper End ##### -->
     </div>
+    </div>
+    <!-- ##### Main Content Wrapper End ##### -->
 {% endblock %}

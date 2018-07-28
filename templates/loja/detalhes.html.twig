@@ -40,9 +40,9 @@
             <div class="widget catagory mb-50">
 
             <!-- Button Group -->
-            {% if user %}
+             {% if app.user %}
                 <div class="amado-btn-group mt-30 mb-100">
-                    <div class="btn amado-btn active">{{ user.username}}</div>
+                    <div class="btn amado-btn active">{{ app.user.username}}</div>
                 </div>
             {% else %}
                 <div class="amado-btn-group mt-30 mb-100">
@@ -52,9 +52,13 @@
 
             <!-- Cart Menu -->
             <div class="cart-fav-search mb-100">
-                <a href="cart.html" class="cart-nav">
+                <a href="/carrinho" class="cart-nav">
                     <img src="img/core-img/cart.png" alt=""> Carrinho
-                    <span>(0)</span>
+                    {% if app.session.get('quantidadeItens') %}
+                        <span>({{app.session.get('quantidadeItens')}})</span>
+                    {% else %}
+                        <span>(0)</span>
+                    {% endif %}
                 </a>
                 <a href="#" class="fav-nav">
                 <a href="#" class="search-nav">
@@ -125,12 +129,13 @@
                             </div>
 
                             <!-- Add to Cart Form -->
-                            <form class="cart clearfix" method="post">
+                            <form class="cart clearfix" action="/carrinho/adicionar" method="post">
                                 <div class="cart-btn d-flex mb-50">
-                                    <p>Qty</p>
+                                    <p>Qunatidade</p>
                                     <div class="quantity">
+                                        <input type="hidden" name="produto" value="{{produto.id}}">
                                         <span class="qty-minus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty ) &amp;&amp; qty &gt; 1 ) effect.value--;return false;"><i class="fa fa-caret-down" aria-hidden="true"></i></span>
-                                        <input type="number" class="qty-text" id="qty" step="1" min="1" max="300" name="quantity" value="1">
+                                        <input type="number" class="qty-text" id="qty" step="1" min="1" max="300" name="quantidade" value="1">
                                         <span class="qty-plus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty )) effect.value++;return false;"><i class="fa fa-caret-up" aria-hidden="true"></i></span>
                                     </div>
                                 </div>

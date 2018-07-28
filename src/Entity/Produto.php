@@ -43,9 +43,15 @@ class Produto
      */
     private $produtoCategorias;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ItemCarrinho", mappedBy="produto")
+     */
+    private $itemCarrinhos;
+
     public function __construct()
     {
         $this->produtoCategorias = new ArrayCollection();
+        $this->itemCarrinhos = new ArrayCollection();
     }
 
     public function getId()
@@ -126,6 +132,37 @@ class Produto
             // set the owning side to null (unless already changed)
             if ($produtoCategoria->getProduto() === $this) {
                 $produtoCategoria->setProduto(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ItemCarrinho[]
+     */
+    public function getItemCarrinhos(): Collection
+    {
+        return $this->itemCarrinhos;
+    }
+
+    public function addItemCarrinho(ItemCarrinho $itemCarrinho): self
+    {
+        if (!$this->itemCarrinhos->contains($itemCarrinho)) {
+            $this->itemCarrinhos[] = $itemCarrinho;
+            $itemCarrinho->setProduto($this);
+        }
+
+        return $this;
+    }
+
+    public function removeItemCarrinho(ItemCarrinho $itemCarrinho): self
+    {
+        if ($this->itemCarrinhos->contains($itemCarrinho)) {
+            $this->itemCarrinhos->removeElement($itemCarrinho);
+            // set the owning side to null (unless already changed)
+            if ($itemCarrinho->getProduto() === $this) {
+                $itemCarrinho->setProduto(null);
             }
         }
 

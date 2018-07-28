@@ -51,9 +51,9 @@
                 </div>
             </div>
             <!-- Button Group -->
-            {% if user %}
+             {% if app.user %}
                 <div class="amado-btn-group mt-30 mb-100">
-                    <div class="btn amado-btn active">{{ user.username}}</div>
+                    <div class="btn amado-btn active">{{ app.user.username}}</div>
                 </div>
             {% else %}
                 <div class="amado-btn-group mt-30 mb-100">
@@ -62,9 +62,13 @@
             {% endif %}
             <!-- Cart Menu -->
             <div class="cart-fav-search mb-100">
-                <a href="cart.html" class="cart-nav">
+                <a href="/carrinho" class="cart-nav">
                     <img src="img/core-img/cart.png" alt=""> Carrinho
-                    <span>(0)</span>
+                    {% if app.session.get('quantidadeItens') %}
+                        <span>({{app.session.get('quantidadeItens')}})</span>
+                    {% else %}
+                        <span>(0)</span>
+                    {% endif %}
                 </a>
                 <a href="#" class="fav-nav">
                 <a href="#" class="search-nav">

@@ -8,7 +8,7 @@ security:
         in_memory: 
             memory:
                 users:
-                    ryan:
+                    everton:
                         password: $2y$12$YUuqhtXdfCNfUVFLuup9uuo12wRC5il.aYGJZQgXQyeehLas7VAfG
                         roles: 'ROLE_USER'
     firewalls:
@@ -20,6 +20,9 @@ security:
             form_login:
                 login_path: login
                 check_path: login
+            logout:
+                path:   /logout
+                target: /
 
             # activate different ways to authenticate
 

@@ -2,6 +2,7 @@
 // src/Entity/User.php
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
@@ -38,9 +39,15 @@ class User implements AdvancedUserInterface, \Serializable
      */
     private $isActive;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Carrinho", mappedBy="user")
+     */
+    private $carrinhos;
+
     public function __construct()
     {
         $this->isActive = true;
+        $this->carrinhos = new ArrayCollection();
         // may not be needed, see section on salt below
         // $this->salt = md5(uniqid('', true));
     }
@@ -106,4 +113,5 @@ class User implements AdvancedUserInterface, \Serializable
             $this->isActive
         ) = unserialize($serialized);
     }
+
 }
