@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -35,6 +37,16 @@ class Produto
      * @ORM\Column(type="decimal", precision=7, scale=2)
      */
     private $preco;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ProdutoCategoria", mappedBy="produto")
+     */
+    private $produtoCategorias;
+
+    public function __construct()
+    {
+        $this->produtoCategorias = new ArrayCollection();
+    }
 
     public function getId()
     {
@@ -85,6 +97,37 @@ class Produto
     public function setPreco($preco): self
     {
         $this->preco = $preco;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ProdutoCategoria[]
+     */
+    public function getProdutoCategorias(): Collection
+    {
+        return $this->produtoCategorias;
+    }
+
+    public function addProdutoCategoria(ProdutoCategoria $produtoCategoria): self
+    {
+        if (!$this->produtoCategorias->contains($produtoCategoria)) {
+            $this->produtoCategorias[] = $produtoCategoria;
+            $produtoCategoria->setProduto($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProdutoCategoria(ProdutoCategoria $produtoCategoria): self
+    {
+        if ($this->produtoCategorias->contains($produtoCategoria)) {
+            $this->produtoCategorias->removeElement($produtoCategoria);
+            // set the owning side to null (unless already changed)
+            if ($produtoCategoria->getProduto() === $this) {
+                $produtoCategoria->setProduto(null);
+            }
+        }
 
         return $this;
     }

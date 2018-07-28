@@ -25,63 +25,39 @@
 
     <!-- ##### Main Content Wrapper Start ##### -->
     <div class="main-content-wrapper d-flex clearfix">
-
-        <!-- Mobile Nav (max width 767px)-->
-        <div class="mobile-nav">
-            <!-- Navbar Brand -->
-            <div class="amado-navbar-brand">
-                
-            </div>
-            <!-- Navbar Toggler -->
-            <div class="amado-navbar-toggler">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </div>
-
         <!-- Header Area Start -->
         <header class="header-area clearfix">
-            <!-- Close Icon -->
-            <div class="nav-close">
-                <i class="fa fa-close" aria-hidden="true"></i>
+            <!-- ##### Single Widget ##### -->
+            <div class="widget catagory mb-50">
+                <!-- Widget Title -->
+                <h6 class="widget-title mb-30">Catagories</h6>
+
+                <!--  Catagories  -->
+                <div class="catagories-menu">
+                    <ul>
+                        {% for categoria in categorias %}
+                            <li><a href="#">{{ categoria.nome }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
-            <!-- Logo -->
-            <div class="logo">
-            </div>
-            <!-- Amado Nav -->
-            <nav class="amado-nav">
-                <ul>
-                    <li class="active">
-                        <a href="index.html">Home</a>
-                    </li>
-                    <li>
-                        <a href="shop.html">Shop</a>
-                    </li>
-                    <li>
-                        <a href="product-details.html">Product</a>
-                    </li>
-                    <li>
-                        <a href="cart.html">Cart</a>
-                    </li>
-                    <li>
-                        <a href="checkout.html">Checkout</a>
-                    </li>
-                </ul>
-            </nav>
             <!-- Button Group -->
+            <div class="amado-btn-group mt-30 mb-100">
+                <a href="#" class="btn amado-btn active">Login</a>
+            </div>
             <!-- Cart Menu -->
             <div class="cart-fav-search mb-100">
                 <a href="cart.html" class="cart-nav">
-                    <img src="img/core-img/cart.png" alt=""> Cart
+                    <img src="img/core-img/cart.png" alt=""> Carrinho
                     <span>(0)</span>
                 </a>
                 <a href="#" class="fav-nav">
                 <a href="#" class="search-nav">
-                    <img src="img/core-img/search.png" alt=""> Search</a>
+                    <img src="img/core-img/search.png" alt=""> Buscar</a>
             </div>
         </header>
         <!-- Header Area End -->
+        
 
         <!-- Product Catagories Area Start -->
         <div class="products-catagories-area clearfix">

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Produto;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use \App\Entity\Categoria;
 
 class LojaController extends AbstractController
 {
@@ -13,10 +14,13 @@ class LojaController extends AbstractController
      */
     public function indexAction()
     {
-        $repository = $this->getDoctrine()->getRepository(Produto::class);
-        $produtos = $repository->findAll();
+        $repositoryProdutos = $this->getDoctrine()->getRepository(Produto::class);
+        $produtos = $repositoryProdutos->findAll();
 
-        return $this->render('loja/index.html.twig', array('produtos' => $produtos));
+        $repositoryCategoria = $this->getDoctrine()->getRepository(Categoria::class);
+        $categorias = $repositoryCategoria->findAll();
+
+        return $this->render('loja/index.html.twig', array('produtos' => $produtos, 'categorias' => $categorias));
     }
 
     /**
