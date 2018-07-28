@@ -29,11 +29,27 @@
         <header class="header-area clearfix">
             <!-- ##### Single Widget ##### -->
             <div class="widget catagory mb-50">
+            <nav class="amado-nav">
+                <ul>
+                    <li class="active">
+                        <a href="/">Home</a>
+                    </li>
+                </ul>
+            </nav>
+            <!-- ##### Single Widget ##### -->
+            <div class="widget catagory mb-50">
 
             <!-- Button Group -->
-            <div class="amado-btn-group mt-30 mb-100">
-                <a href="#" class="btn amado-btn active">Login</a>
-            </div>
+            {% if user %}
+                <div class="amado-btn-group mt-30 mb-100">
+                    <div class="btn amado-btn active">{{ user.username}}</div>
+                </div>
+            {% else %}
+                <div class="amado-btn-group mt-30 mb-100">
+                    <a href="#" class="btn amado-btn active">Login</a>
+                </div>
+            {% endif %}
+
             <!-- Cart Menu -->
             <div class="cart-fav-search mb-100">
                 <a href="cart.html" class="cart-nav">
