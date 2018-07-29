@@ -8,12 +8,11 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20180729123715 extends AbstractMigration
+final class Version20180729163606 extends AbstractMigration
 {
     public function up(Schema $schema): void
-    
+    {
         // this up() migration is auto-generated, please modify it to your needs
-        
         $this->connection->exec('INSERT INTO produto(id, nome, descricao, imagem, preco) VALUES(1,"Morderna Cadeira Branca","Lorem ipsum dolor sit amet, consectetur adipisicing elit.","img/bg-img/1.jpg","180.00");');
         $this->connection->exec('INSERT INTO produto(id, nome, descricao, imagem, preco) VALUES(2,"Morderna Cadeira","Lorem ipsum dolor sit amet, consectetur adipisicing elit.","img/bg-img/3.jpg","180.00");');
         $this->connection->exec('INSERT INTO produto(id, nome, descricao, imagem, preco) VALUES(3,"Moderna Cadeira de Balanço","Lorem ipsum dolor sit amet, consectetur adipisicing elit.","img/bg-img/8.jpg","200.00");');
@@ -23,7 +22,6 @@ final class Version20180729123715 extends AbstractMigration
         $this->connection->exec('INSERT INTO produto(id, nome, descricao, imagem, preco) VALUES(7,"Mesa","Lorem ipsum dolor sit amet, consectetur adipisicing elit.","img/bg-img/6.jpg","180.00");');
         $this->connection->exec('INSERT INTO produto(id, nome, descricao, imagem, preco) VALUES(8,"Banco Metálico","Lorem ipsum dolor sit amet, consectetur adipisicing elit.","img/bg-img/7.jpg","180.00");');
         $this->connection->exec('INSERT INTO produto(id, nome, descricao, imagem, preco) VALUES(9,"Enfeite de Decoração","Lorem ipsum dolor sit amet, consectetur adipisicing elit.","img/bg-img/9.jpg","318.00");');
-
 
         $this->connection->exec('INSERT INTO categoria(id, nome) VALUES(1,"Decoração");');
         $this->connection->exec('INSERT INTO categoria(id, nome) VALUES(2,"Jardim e Lazer");');
