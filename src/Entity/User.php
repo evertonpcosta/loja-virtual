@@ -98,20 +98,30 @@ class User implements AdvancedUserInterface, \Serializable
         return $this->isActive;
     }
 
-    // serialize and unserialize must be updated - see below
+    /** @see \Serializable::serialize() */
     public function serialize()
     {
         return serialize(array(
-            // ...
+            $this->id,
+            $this->username,
+            $this->password,
+            // see section on salt below
+            // $this->salt,
             $this->isActive,
         ));
     }
+
+    /** @see \Serializable::unserialize() */
     public function unserialize($serialized)
     {
         list(
-            // ...
+            $this->id,
+            $this->username,
+            $this->password,
+            // see section on salt below
+            // $this->salt
             $this->isActive
-        ) = unserialize($serialized);
+        ) = unserialize($serialized, array('allowed_classes' => false));
     }
 
 }

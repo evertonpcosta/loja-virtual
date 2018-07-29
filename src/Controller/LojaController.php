@@ -16,17 +16,30 @@ class LojaController extends AbstractController
     /**
      * @Route("/")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $user = $this->getUser();
-
-        $repositoryProdutos = $this->getDoctrine()->getRepository(Produto::class);
-        $produtos = $repositoryProdutos->findAll();
-
+        $busca = !empty($request->get('search')) ? $request->get('search') : '';
         $repositoryCategoria = $this->getDoctrine()->getRepository(Categoria::class);
         $categorias = $repositoryCategoria->findAll();
 
-        return $this->render('loja/index.html.twig', array('produtos' => $produtos, 'categorias' => $categorias));
+        if (!empty($request->get('categoria'))) {
+            $categoriaRes = $this->getDoctrine()->getRepository(Categoria::class);
+            $categoriaSe = $categoriaRes->find($request->get('categoria'));
+        } else {
+            $categoriaSe = $categorias;
+        }
+
+        $produtos = $this->getDoctrine()->getRepository(Produto::class)->createQueryBuilder('p')
+            ->innerJoin('p.produtoCategorias', 'pc')
+            ->where('p.nome LIKE :nome')
+            ->andWhere(!empty($request->get('categoria')) ? 'pc.categoria = :categoria' : 'pc.categoria IN (:categoria)')
+            ->setParameter('nome', '%' . $busca . '%')
+            ->setParameter('categoria', $categoriaSe)
+            ->getQuery()
+            ->getResult();
+
+        return $this->render('loja/index.html.twig', array('produtos' => $produtos, 'categorias' => $categorias, 'busca' => $busca));
     }
 
     /**
@@ -194,11 +207,34 @@ class LojaController extends AbstractController
             $session->remove('carrinho');
             return $this->redirect('/');
         }
+
         $carrinho->setStatus(2);
         $entityManager->flush();
         $session->remove('quantidadeItens');
         $session->remove('carrinho');
         return $this->render('loja/carrinhoFinalizar.html.twig', array('carro' => $carrinho));
+
+    }
+
+    /**
+     * @Route("/pedidos")
+     */
+    public function pedidosAction()
+    {
+        $user = $this->getUser();
+        $session = new Session();
+
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $carrinho = $this->getDoctrine()
+            ->getRepository(Carrinho::class)
+            ->findBy(['status' => 2]);
+
+        $itensCarrinho = $this->getDoctrine()
+            ->getRepository(ItemCarrinho::class)
+            ->findByCarrinho($carrinho);
+
+        return $this->render('loja/pedidos.html.twig', array('itensCarrinho' => $itensCarrinho, 'pedidos' => $carrinho));
 
     }
 

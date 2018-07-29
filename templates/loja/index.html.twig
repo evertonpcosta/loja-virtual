@@ -10,8 +10,8 @@
             <div class="row">
                 <div class="col-12">
                     <div class="search-content">
-                        <form action="#" method="get">
-                            <input type="search" name="search" id="search" placeholder="Type your keyword...">
+                        <form action="/" method="get">
+                            <input type="search" name="search" id="search" value="{{ busca}}" placeholder="Digite o texto de busca aqui...">
                             <button type="submit">
                                 <img src="img/core-img/search.png" alt="">
                             </button>
@@ -29,13 +29,19 @@
         <header class="header-area clearfix">
             <!-- ##### Single Widget ##### -->
             <div class="widget catagory mb-50">
-            <nav class="amado-nav">
-                <ul>
-                    <li class="active">
-                        <a href="/">Home</a>
-                    </li>
-                </ul>
-            </nav>
+                <nav class="amado-nav">
+                    <ul>
+                        <li class="active">
+                            <a href="/">Home</a>
+                        </li>
+                        {% if app.user %}
+                        <li>
+                            <a href="/pedidos">Meus Pedidos</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
             <!-- ##### Single Widget ##### -->
             <div class="widget catagory mb-50">
                 <!-- Widget Title -->
@@ -45,7 +51,11 @@
                 <div class="catagories-menu">
                     <ul>
                         {% for categoria in categorias %}
-                            <li><a href="#">{{ categoria.nome }}</a></li>
+                            {% if app.request.get('categoria') == categoria.id %}
+                                <li class="active"><a href="/?categoria={{ categoria.id }}">{{ categoria.nome }}</a></li>
+                            {% else %}
+                                <li><a href="/?categoria={{ categoria.id }}">{{ categoria.nome }}</a></li>
+                            {% endif %}
                         {% endfor %}
                     </ul>
                 </div>
@@ -57,7 +67,7 @@
                 </div>
             {% else %}
                 <div class="amado-btn-group mt-30 mb-100">
-                    <a href="#" class="btn amado-btn active">Login</a>
+                    <a href="/login" class="btn amado-btn active">Login</a>
                 </div>
             {% endif %}
             <!-- Cart Menu -->

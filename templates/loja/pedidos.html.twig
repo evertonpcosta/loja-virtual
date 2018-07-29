@@ -1,0 +1,105 @@
+{# templates/base.html.twig #}
+{% extends 'base.html.twig' %}
+{% block body %}
+    <!-- ##### Main Content Wrapper Start ##### -->
+    <div class="main-content-wrapper d-flex clearfix">
+        <!-- Header Area Start -->
+        <header class="header-area clearfix">
+            <!-- ##### Single Widget ##### -->
+            <div class="widget catagory mb-50">
+            <nav class="amado-nav">
+                <ul>
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    {% if app.user %}
+                    <li class="active">
+                        <a href="/pedidos">Meus Pedidos</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            <!-- ##### Single Widget ##### -->
+            <div class="widget catagory mb-50">
+
+            <!-- Button Group -->
+             {% if app.user %}
+                <div class="amado-btn-group mt-30 mb-100">
+                    <div class="btn amado-btn active">{{ app.user.username}}</div>
+                </div>
+            {% else %}
+                <div class="amado-btn-group mt-30 mb-100">
+                    <a href="/login" class="btn amado-btn active">Login</a>
+                </div>
+            {% endif %}
+
+            <!-- Cart Menu -->
+            <div class="cart-fav-search mb-100">
+                <a href="/carrinho" class="cart-nav">
+                    <img src="img/core-img/cart.png" alt=""> Carrinho
+                    {% if app.session.get('quantidadeItens') %}
+                        <span>({{app.session.get('quantidadeItens')}})</span>
+                    {% else %}
+                        <span>(0)</span>
+                    {% endif %}
+                </a>
+            </div>
+        </header>
+        <!-- Header Area End -->
+                <div class="cart-table-area section-padding-100">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 col-lg-8">
+                        <div class="cart-title mt-50">
+                            <h2>Pedidos</h2>
+                        </div>
+
+                        <div class="cart-table clearfix">
+                            <table class="table table-responsive">
+                                <tbody>
+                                {% for pedido in pedidos %}
+                                    
+                                    <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Nome</th>
+                                        <th>Valor</th>
+                                        <th>Quantidade</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% set valorTotal = 0 %}
+                                        {% for item in itensCarrinho %}
+                                            {% if item.carrinho.id == pedido.id %}
+                                                <tr>
+                                                    <td class="cart_product_img">
+                                                        <a href="#"><img src="../{{item.produto.imagem}}" alt="Product"></a>
+                                                    </td>
+                                                    <td class="cart_product_desc">
+                                                        <h5>R$ {{item.produto.nome}}</h5>
+                                                    </td>
+                                                    <td class="price">
+                                                        <span>{{item.produto.preco}}</span>
+                                                    </td>
+                                                    <td class="price">
+                                                        <span>{{item.quantidade}}</span>
+                                                    </td>
+                                                </tr>
+                                                {% set valorTotal = valorTotal + (item.produto.preco * item.quantidade) %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ##### Main Content Wrapper End ##### -->
+    </div>
+    </div>
+    <!-- ##### Main Content Wrapper End ##### -->
+{% endblock %}

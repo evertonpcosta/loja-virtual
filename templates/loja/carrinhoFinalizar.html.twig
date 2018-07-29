@@ -1,28 +1,6 @@
 {# templates/base.html.twig #}
 {% extends 'base.html.twig' %}
 {% block body %}
-        <!-- Search Wrapper Area Start -->
-    <div class="search-wrapper section-padding-100">
-        <div class="search-close">
-            <i class="fa fa-close" aria-hidden="true"></i>
-        </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="search-content">
-                        <form action="#" method="get">
-                            <input type="search" name="search" id="search" placeholder="Type your keyword...">
-                            <button type="submit">
-                                <img src="img/core-img/search.png" alt="">
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Search Wrapper Area End -->
-
     <!-- ##### Main Content Wrapper Start ##### -->
     <div class="main-content-wrapper d-flex clearfix">
         <!-- Header Area Start -->
@@ -34,6 +12,11 @@
                     <li class="active">
                         <a href="/">Home</a>
                     </li>
+                    {% if app.user %}
+                    <li>
+                        <a href="/pedidos">Meus Pedidos</a>
+                    </li>
+                    {% endif %}
                 </ul>
             </nav>
             <!-- ##### Single Widget ##### -->
@@ -46,7 +29,7 @@
                 </div>
             {% else %}
                 <div class="amado-btn-group mt-30 mb-100">
-                    <a href="#" class="btn amado-btn active">Login</a>
+                    <a href="/login" class="btn amado-btn active">Login</a>
                 </div>
             {% endif %}
 
@@ -60,9 +43,6 @@
                         <span>(0)</span>
                     {% endif %}
                 </a>
-                <a href="#" class="fav-nav">
-                <a href="#" class="search-nav">
-                    <img src="img/core-img/search.png" alt=""> Search</a>
             </div>
         </header>
         <!-- Header Area End -->
