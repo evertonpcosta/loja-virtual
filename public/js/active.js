@@ -93,6 +93,16 @@
     $("a[href='#']").on('click', function ($) {
         $.preventDefault();
     });
+    var inputs = $('[type="checkbox"]'); // colocar os inputs em cache
+    inputs.on('click', function() { // juntar auscultador de evento
+        inputs.get().forEach(function(el) { // iterar com a array nativa
+            el.checked = el == this && this.checked; 
+        }, this);
+    });
+
+    $( "#enderecoContinuar" ).on( "click", function() {
+        window.location.href = "/carrinho/finalizar/"+$( "input:checked" ).val();
+      });
 
     // :: 11.0 Slider Range Price Active Code
     $('.slider-range-price').each(function () {

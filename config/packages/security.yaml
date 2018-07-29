@@ -1,22 +1,27 @@
 security:
     encoders:
-        Symfony\Component\Security\Core\User\User:
-            algorithm: bcrypt
-            cost: 12
+        App\Entity\User: bcrypt
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        in_memory: 
-            memory:
-                users:
-                    everton:
-                        password: $2y$12$YUuqhtXdfCNfUVFLuup9uuo12wRC5il.aYGJZQgXQyeehLas7VAfG
-                        roles: 'ROLE_USER'
+        # in_memory: 
+        #     memory:
+        #         users:
+        #             everton:
+        #                 password: $2y$12$YUuqhtXdfCNfUVFLuup9uuo12wRC5il.aYGJZQgXQyeehLas7VAfG
+        #                 roles: 'ROLE_USER'
+        our_db_provider:
+            entity:
+                class: App\Entity\User
+                property: username
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
             anonymous: true
+            pattern:    ^/
+            http_basic: ~
+            provider: our_db_provider
             form_login:
                 login_path: login
                 check_path: login

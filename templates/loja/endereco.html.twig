@@ -1,0 +1,165 @@
+{# templates/base.html.twig #}
+{% extends 'base.html.twig' %}
+{% block body %}
+
+    <!-- ##### Main Content Wrapper Start ##### -->
+    <div class="main-content-wrapper d-flex clearfix">
+        <!-- Header Area Start -->
+        <header class="header-area clearfix">
+            <!-- ##### Single Widget ##### -->
+            <div class="widget catagory mb-50">
+            <nav class="amado-nav">
+                <ul>
+                    <li class="active">
+                        <a href="/">Home</a>
+                    </li>
+                    {% if app.user %}
+                    <li>
+                        <a href="/pedidos">Meus Pedidos</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            <!-- ##### Single Widget ##### -->
+            <div class="widget catagory mb-50">
+
+            <!-- Button Group -->
+             {% if app.user %}
+                <div class="amado-btn-group mt-30 mb-100">
+                    <div class="btn amado-btn active">{{ app.user.username}}</div>
+                </div>
+            {% else %}
+                <div class="amado-btn-group mt-30 mb-100">
+                    <a href="/login" class="btn amado-btn active">Login</a>
+                </div>
+            {% endif %}
+
+            <!-- Cart Menu -->
+            <div class="cart-fav-search mb-100">
+                <a href="/carrinho" class="cart-nav">
+                    <img src="img/core-img/cart.png" alt=""> Carrinho
+                    {% if app.session.get('quantidadeItens') %}
+                        <span>({{app.session.get('quantidadeItens')}})</span>
+                    {% else %}
+                        <span>(0)</span>
+                    {% endif %}
+                </a>
+            </div>
+        </header>
+        <!-- Header Area End -->
+
+        <div class="cart-table-area section-padding-100">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 col-lg-8">
+                        <div class="checkout_details_area mt-50 clearfix">
+
+                            <div class="cart-title">
+                                <h2>Endereco</h2>
+                            </div>
+
+                            <div class="cart-table clearfix">
+                            <h5>Endereços Cadastrados</h5>
+                            <table class="table table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Endereço</th>
+                                        <th>Bairro</th>
+                                        <th>Cidade/Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% set index = 0 %}
+                                    {% for item in endereco %}
+                                    <tr>
+                                        <td class="price">
+                                            {% if index == 0 %}
+                                            {{ app.session.set('endereco', item.id ) }}
+                                            <input type="checkbox" class="form-control" id="endereco" name="endereco" value={{ item.id }} checked>
+                                            {% else %}
+                                            <input type="checkbox" class="form-control" id="endereco" name="endereco" value={{ item.id }} >
+                                            {% endif %}
+                                        </td>
+                                        <td class="cart_product_desc">
+                                            <h5>{{item.rua}} {{ item.numero }} {{ item.complemento }}</h5>
+                                        </td>
+                                        <td class="cart_product_desc">
+                                            <h5>{{item.bairro}}</h5>
+                                        </td>
+                                        <td class="price">
+                                            <span>{{item.cidade}} / {{ item.estado }}</span>
+                                        </td>
+                                    </tr>
+                                    {% set index = index + 1 %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            </div>
+                            <h5>Cadastrar Novo Endereço</h5>
+                            {{ form_start(form) }}
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        {{ form_row(form.rua) }}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        {{ form_row(form.numero) }}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        {{ form_row(form.complemento) }}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        {{ form_row(form.bairro) }}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        {{ form_row(form.cidade) }}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        {{ form_row(form.cidade) }}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        {{ form_row(form.estado) }}
+                                    </div>    
+                                </div>
+                                <div class="cart-btn mt-100">
+                                    <button class="btn amado-btn w-100" type="submit">Cadastrar!</button>
+                                </div>
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                    {% set valorTotal = 0 %}
+                    {% for item in itensCarrinho %}
+                        {% set valorTotal = valorTotal + (item.produto.preco * item.quantidade) %}
+                    {% endfor %}
+                    <div class="col-12 col-lg-4">
+                        <div class="cart-summary">
+                            <h5>Carrinho Total</h5>
+                            <ul class="summary-table">
+                                <li><span>total:</span> <span>R$ {{valorTotal|number_format(2, '.', ',')}}</span></li>
+                            </ul>
+                            {% if app.user %}
+                                {% if index > 0 %}
+                                <div class="cart-btn mt-100">
+                                    <a href='#' class="btn amado-btn w-100" id="enderecoContinuar">Continuar!</a>
+                                </div>
+                                {% endif %}
+                            {% else %}
+                                <div class="cart-btn mt-100">
+                                <a href="/login" class="btn amado-btn w-100">Logar</a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ##### Main Content Wrapper End ##### -->
+
+
+    
+
+    
+
+{% endblock %}

@@ -3,53 +3,79 @@
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Table(name="app_users")
- * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @ORM\Entity
+ * @UniqueEntity(fields="email", message="Email already taken")
+ * @UniqueEntity(fields="username", message="Username already taken")
  */
-class User implements AdvancedUserInterface, \Serializable
+class User implements UserInterface
 {
     /**
-     * @ORM\Column(type="integer")
      * @ORM\Id
+     * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=25, unique=true)
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\NotBlank()
+     * @Assert\Email()
+     */
+    private $email;
+
+    /**
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\NotBlank()
      */
     private $username;
 
     /**
+     * @Assert\NotBlank()
+     * @Assert\Length(max=4096)
+     */
+    private $plainPassword;
+
+    /**
+     * The below length depends on the "algorithm" you use for encoding
+     * the password, but this works well with bcrypt.
+     *
      * @ORM\Column(type="string", length=64)
      */
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=254, unique=true)
+     * @ORM\Column(type="array")
      */
-    private $email;
+    private $roles;
 
     /**
-     * @ORM\Column(name="is_active", type="boolean")
+     * @ORM\OneToMany(targetEntity="App\Entity\Endereco", mappedBy="user")
      */
-    private $isActive;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Carrinho", mappedBy="user")
-     */
-    private $carrinhos;
+    private $enderecos;
 
     public function __construct()
     {
-        $this->isActive = true;
-        $this->carrinhos = new ArrayCollection();
-        // may not be needed, see section on salt below
-        // $this->salt = md5(uniqid('', true));
+        $this->roles = array('ROLE_USER');
+        $this->enderecos = new ArrayCollection();
+    }
+
+    // other properties and methods
+
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    public function setEmail($email)
+    {
+        $this->email = $email;
     }
 
     public function getUsername()
@@ -57,11 +83,19 @@ class User implements AdvancedUserInterface, \Serializable
         return $this->username;
     }
 
-    public function getSalt()
+    public function setUsername($username)
     {
-        // you *may* need a real salt depending on your encoder
-        // see section on salt below
-        return null;
+        $this->username = $username;
+    }
+
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword($password)
+    {
+        $this->plainPassword = $password;
     }
 
     public function getPassword()
@@ -69,59 +103,55 @@ class User implements AdvancedUserInterface, \Serializable
         return $this->password;
     }
 
+    public function setPassword($password)
+    {
+        $this->password = $password;
+    }
+
+    public function getSalt()
+    {
+        // The bcrypt and argon2i algorithms don't require a separate salt.
+        // You *may* need a real salt if you choose a different encoder.
+        return null;
+    }
+
     public function getRoles()
     {
-        return array('ROLE_USER');
+        return $this->roles;
     }
 
     public function eraseCredentials()
     {
     }
 
-    public function isAccountNonExpired()
+    /**
+     * @return Collection|Endereco[]
+     */
+    public function getEnderecos(): Collection
     {
-        return true;
+        return $this->enderecos;
     }
 
-    public function isAccountNonLocked()
+    public function addEndereco(Endereco $endereco): self
     {
-        return true;
+        if (!$this->enderecos->contains($endereco)) {
+            $this->enderecos[] = $endereco;
+            $endereco->setUser($this);
+        }
+
+        return $this;
     }
 
-    public function isCredentialsNonExpired()
+    public function removeEndereco(Endereco $endereco): self
     {
-        return true;
-    }
+        if ($this->enderecos->contains($endereco)) {
+            $this->enderecos->removeElement($endereco);
+            // set the owning side to null (unless already changed)
+            if ($endereco->getUser() === $this) {
+                $endereco->setUser(null);
+            }
+        }
 
-    public function isEnabled()
-    {
-        return $this->isActive;
+        return $this;
     }
-
-    /** @see \Serializable::serialize() */
-    public function serialize()
-    {
-        return serialize(array(
-            $this->id,
-            $this->username,
-            $this->password,
-            // see section on salt below
-            // $this->salt,
-            $this->isActive,
-        ));
-    }
-
-    /** @see \Serializable::unserialize() */
-    public function unserialize($serialized)
-    {
-        list(
-            $this->id,
-            $this->username,
-            $this->password,
-            // see section on salt below
-            // $this->salt
-            $this->isActive
-        ) = unserialize($serialized, array('allowed_classes' => false));
-    }
-
 }

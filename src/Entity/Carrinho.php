@@ -37,6 +37,11 @@ class Carrinho
      */
     private $itemCarrinhos;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Endereco", inversedBy="carrinhos")
+     */
+    private $endereco;
+
     public function __construct()
     {
         $this->itemCarrinhos = new ArrayCollection();
@@ -83,4 +88,15 @@ class Carrinho
         return $this;
     }
 
+    public function getEndereco(): ?Endereco
+    {
+        return $this->endereco;
+    }
+
+    public function setEndereco(?Endereco $endereco): self
+    {
+        $this->endereco = $endereco;
+
+        return $this;
+    }
 }

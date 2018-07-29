@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Carrinho;
+use App\Entity\Endereco;
 use App\Entity\ItemCarrinho;
 use App\Entity\Produto;
+use App\Form\EnderecoType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -78,6 +80,7 @@ class LojaController extends AbstractController
         if (!$itensCarrinho) {
             $session->remove('quantidadeItens');
         }
+
         return $this->render('loja/carrinho.html.twig', array('itensCarrinho' => $itensCarrinho));
 
     }
@@ -187,9 +190,9 @@ class LojaController extends AbstractController
     }
 
     /**
-     *  @Route("/carrinho/finalizar")
+     *  @Route("/carrinho/finalizar/{enderecoId}")
      */
-    public function carrinhoAFinalizarAction()
+    public function carrinhoAFinalizarAction($enderecoId)
     {
         $user = $this->getUser();
         $session = new Session();
@@ -208,7 +211,13 @@ class LojaController extends AbstractController
             return $this->redirect('/');
         }
 
+        $endereco = $this->getDoctrine()
+            ->getRepository(Endereco::class)
+            ->findOneBy(['id' => $enderecoId]);
+
         $carrinho->setStatus(2);
+        $carrinho->setUser($user);
+        $carrinho->setEndereco($endereco);
         $entityManager->flush();
         $session->remove('quantidadeItens');
         $session->remove('carrinho');
@@ -228,7 +237,7 @@ class LojaController extends AbstractController
 
         $carrinho = $this->getDoctrine()
             ->getRepository(Carrinho::class)
-            ->findBy(['status' => 2]);
+            ->findBy(['status' => 2, 'user' => $user]);
 
         $itensCarrinho = $this->getDoctrine()
             ->getRepository(ItemCarrinho::class)
@@ -236,6 +245,58 @@ class LojaController extends AbstractController
 
         return $this->render('loja/pedidos.html.twig', array('itensCarrinho' => $itensCarrinho, 'pedidos' => $carrinho));
 
+    }
+
+    /**
+     * @Route("/endereco", name="endereco")
+     */
+    public function enderecoAction(Request $request)
+    {
+        $user = $this->getUser();
+        $session = new Session();
+        // 1) build the form
+        $endereco = new Endereco();
+        $form = $this->createForm(EnderecoType::class, $endereco);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $endereco->setUser($user);
+
+            // 4) save the User!
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($endereco);
+            $entityManager->flush();
+
+            $session->set('endereco', $endereco->getId());
+
+            return $this->redirect('/endereco');
+        }
+
+        if (empty($session->get('carrinho'))) {
+            exit('carrinho vazio');
+        }
+        $carrinho = $this->getDoctrine()
+            ->getRepository(Carrinho::class)
+            ->findOneBy(['id' => $session->get('carrinho'), 'status' => 1]);
+
+        if (!$carrinho) {
+            $session->remove('quantidadeItens');
+            $session->remove('carrinho');
+        }
+        $itensCarrinho = $this->getDoctrine()
+            ->getRepository(ItemCarrinho::class)
+            ->findByCarrinho($carrinho);
+        if (!$itensCarrinho) {
+            $session->remove('quantidadeItens');
+        }
+        $endereco = $this->getDoctrine()
+            ->getRepository(Endereco::class)
+            ->findByUser($user);
+        return $this->render(
+            'loja/endereco.html.twig',
+            array('form' => $form->createView(), 'itensCarrinho' => $itensCarrinho, 'endereco' => $endereco)
+        );
     }
 
 }
