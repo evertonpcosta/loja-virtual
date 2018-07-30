@@ -6,9 +6,11 @@ Depois que clonar o projeto entrar na pasta:
 cd loja-virtual
 
 Intalar as dependencias do composer:
+
 composer require symfony/web-server-bundle --dev
 
 #Configurar os dados de conexão ao banco no arquivo .env
+
 DATABASE_URL=mysql://db_user:db_password@127.0.0.1:3306/db_name
 
 Criar o banco de dados:
@@ -22,6 +24,6 @@ excuter o server :
 
 php bin/console server:start 0.0.0.0:8000
 
-usuário para acessar foi definido como padrão nas configs
-user = everton
-senha = 123456
+cirei uma tela para criar usuarios, não coloquei isso no fluxo do teste, mas para criar o usuário precisa acessar direto a url
+
+http://localhost:8000/register
