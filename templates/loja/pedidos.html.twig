@@ -23,9 +23,9 @@
             <div class="widget catagory mb-50">
 
             <!-- Button Group -->
-             {% if app.user %}
+            {% if app.user %}
                 <div class="amado-btn-group mt-30 mb-100">
-                    <div class="btn amado-btn active">{{ app.user.username}}</div>
+                    <a href="/logout" class="btn amado-btn active">Logout</a>
                 </div>
             {% else %}
                 <div class="amado-btn-group mt-30 mb-100">
@@ -82,6 +82,7 @@
                                                     <td class="price">
                                                         <span>{{item.quantidade}}</span>
                                                     </td>
+                                                    {% if valorTotal ==0 %}
                                                     <td class="price">
                                                         <span>{{item.carrinho.endereco.rua}}, 
                                                         {{item.carrinho.endereco.numero}}, 
@@ -89,6 +90,7 @@
                                                         {{item.carrinho.endereco.bairro}}
                                                         {{item.carrinho.endereco.cidade}}/{{item.carrinho.endereco.estado}}</span>
                                                     </td>
+                                                    {% endif %}
                                                 </tr>
                                                 {% set valorTotal = valorTotal + (item.produto.preco * item.quantidade) %}
                                             {% endif %}

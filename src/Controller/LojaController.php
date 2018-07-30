@@ -64,7 +64,7 @@ class LojaController extends AbstractController
         $session = new Session();
 
         if (empty($session->get('carrinho'))) {
-            exit('carrinho vazio');
+            return $this->redirect('/');
         }
         $carrinho = $this->getDoctrine()
             ->getRepository(Carrinho::class)
@@ -198,7 +198,7 @@ class LojaController extends AbstractController
         $session = new Session();
 
         if (empty($session->get('carrinho'))) {
-            exit('carrinho vazio');
+            return $this->redirect('/carrinho');
         }
         $entityManager = $this->getDoctrine()->getManager();
         $carrinho = $this->getDoctrine()
